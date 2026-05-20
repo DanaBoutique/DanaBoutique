@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد الطلب | متجر الجوهرة</title>
-    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\style.css">
-    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\checkout.css">
+    <link rel="stylesheet" href="./CSS/style.css">
+    <link rel="stylesheet" href="./CSS/checkout.css">
+    
+
 </head>
 <body>
 
@@ -23,27 +25,27 @@
 
     <main class="checkout-container">
         <div class="checkout-wrapper">
-            
+
             <div class="checkout-form-box">
                 <h2>بيانات الشحن والتوصيل</h2>
                 <p class="form-subtitle">الرجاء إدخال بياناتك بدقة لضمان وصول الشحنة إليك في أسرع وقت.</p>
-                
+
                 <form id="checkout-form">
                     <div class="form-group">
                         <label for="cust-name">الاسم الكامل:</label>
                         <input type="text" id="cust-name" placeholder="المشتري الثنائي أو الثلاثي" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cust-phone">رقم الجوال (للتواصل عند التوصيل):</label>
                         <input type="tel" id="cust-phone" placeholder="05xxxxxxxx" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cust-city">المدينة:</label>
                         <input type="text" id="cust-city" placeholder="مثال: الرياض، جدة، الدمام" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="cust-address">العنوان السكني بالتفصيل:</label>
                         <textarea id="cust-address" rows="3" placeholder="اسم الحي، الشارع، رقم المنزل إن وُجد" required></textarea>
@@ -60,7 +62,7 @@
             <div class="checkout-summary-box">
                 <h3>ملخص الفاتورة</h3>
                 <div id="checkout-items-list">
-                    </div>
+                </div>
                 <hr>
                 <div class="summary-total-row">
                     <span>الإجمالي النهائي:</span>
@@ -74,7 +76,7 @@
     <footer>
         <p>&copy; 2026 متجر الجوهرة للمجوهرات. جميع الحقوق محفوظة.</p>
     </footer>
+    <script src="./js/checkout.js"></script>
 
-    <script src="C:\Users\Lenovo\Desktop\DanaWeb\js\checkout.js"></script>
 </body>
 </html>
