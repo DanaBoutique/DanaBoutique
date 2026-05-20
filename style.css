@@ -1,0 +1,313 @@
+/* 1. إعدادات عامة للموقع وتصفير الهوامش */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #fcfcfc;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 2. تنسيق الهيدر (شريط التنقل العلوي) */
+header {
+    background-color: #1a1a1a; /* أسود فاخر */
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid #c5a059; /* خط ذهبي أسفل الهيدر */
+}
+
+.logo h1 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.logo span {
+    color: #c5a059; /* كلمة للمجوهرات بالذهبي */
+    font-size: 16px;
+    display: inline-block;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav ul li a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover, nav ul li a.active {
+    color: #c5a059; /* يتغير اللون للذهبي عند مرور الماوس */
+}
+
+.cart-icon a {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #c5a059;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.cart-icon a:hover {
+    background-color: #aa843d;
+}
+
+/* 3. تنسيق البانر الرئيسي (Hero Section) */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/hero-bg.jpg') no-repeat center center/cover;
+    background-color: #222; /* خلفية بديلة إذا لم تتوفر الصورة */
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    padding: 0 20px;
+}
+
+.hero-content h2 {
+    font-size: 42px;
+    margin-bottom: 15px;
+    color: #f1e5cd;
+}
+
+.hero-content p {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    color: #dddddd;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #c5a059;
+    color: #1a1a1a;
+    padding: 12px 30px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #f1e5cd;
+    transform: translateY(-2px);
+}
+
+/* 4. تنسيق قسم الأقسام (Categories) */
+.categories {
+    padding: 60px 8%;
+    text-align: center;
+}
+
+.categories h2, .products h2 {
+    font-size: 28px;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* خط ذهبي صغير أسفل العناوين الرئيسية */
+.categories h2::after, .products h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background-color: #c5a059;
+}
+
+.categories-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.category-item {
+    background-color: #1a1a1a;
+    color: #f1e5cd;
+    width: 250px;
+    padding: 40px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #c5a059;
+    transition: transform 0.3s ease;
+}
+
+.category-item:hover {
+    transform: scale(1.05);
+}
+
+/* 5. تنسيق شبكة المنتجات (Products Grid) */
+.products {
+    padding: 60px 8%;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.products-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    width: 300px;
+    padding: 20px;
+    text-align: right; /* لتنسيق النصوص العربية للمنتج */
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.product-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* تجعل الصورة متناسقة دون تمطيط */
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.product-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+}
+
+.product-details {
+    font-size: 13px;
+    color: #777777;
+    margin-bottom: 10px;
+}
+
+.product-card .price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #c5a059;
+    margin-bottom: 20px;
+}
+
+.product-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn-secondary {
+    display: inline-block;
+    border: 1px solid #c5a059;
+    color: #c5a059;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 4px;
+    text-align: center;
+    flex: 1;
+    transition: background 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #fcf8f0;
+}
+
+.btn-add-cart {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    flex: 1;
+    transition: background 0.3s ease;
+}
+
+.btn-add-cart:hover {
+    background-color: #c5a059;
+    color: #1a1a1a;
+}
+
+/* 6. تنسيق الفوتر (أسفل الموقع) */
+footer {
+    background-color: #1a1a1a;
+    color: #888888;
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 14px;
+    border-top: 3px solid #c5a059;
+}
+
+footer strong {
+    color: #c5a059;
+}
+
+/* تنسيق سطر المخزون في كارت المنتج */
+.product-stock-status {
+    font-size: 13px;
+    color: #888888;
+    margin: 5px 0 10px 0;
+    text-align: right;
+}
+
+    .product-stock-status span {
+        color: #b81d1d; /* لون أحمر داكن هادئ لإشعار العميل بقرب نفاد الكمية وتحفيزه على الشراء */
+        font-weight: bold;
+    }
+
+/* تنسيق زر تبديل اللغة الفخم */
+.lang-btn {
+    background: transparent;
+    border: 1px solid #c5a059;
+    color: #c5a059;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .lang-btn:hover {
+        background-color: #c5a059;
+        color: #1a1a1a;
+        font-weight: bold;
+    }
+
+/* تحسين مرونة الهيدر عند تحول الاتجاه لـ LTR */
+html[dir="ltr"] text-align {
+    text-align: left;
+}
+
+html[dir="ltr"] .product-card {
+    text-align: left;
+}
+
+html[dir="ltr"] .product-stock-status {
+    text-align: left;
+}

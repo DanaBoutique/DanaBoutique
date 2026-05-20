@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل القطعة | متجر الجوهرة</title>
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\style.css">
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\product.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>الجوهرة <span>للمجوهرات</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="index.html#categories">الأقسام</a></li>
+                <li><a href="index.html#products">المنتجات</a></li>
+                <li><button id="lang-switcher" class="lang-btn">English</button></li>
+            </ul>
+        </nav>
+        <div class="cart-icon">
+            <a href="cart.html">🛒 السلة (<span id="cart-count">0</span>)</a>
+        </div>
+    </header>
+
+    <main class="product-details-container">
+        <div class="back-to-store">
+            <a href="index.html">⬅️ العودة للمتجر</a>
+        </div>
+
+        <div class="product-single-wrapper">
+            <div class="product-gallery">
+                <div class="main-image-box">
+                    <img src="C:\Users\Lenovo\Desktop\DanaWeb\images\bracelet1.jpeg" id="main-product-img" alt="صورة المنتج الرئيسية">
+                </div>
+                <div class="thumbnails-container">
+                    <img src="images/ring1.jpg" class="thumb-img active" onclick="changePreviewImage(this.src)">
+                    </div>
+            </div>
+
+            <div class="product-info-box">
+                <h2 class="product-title" id="p-title">خاتم ملكي فاخر</h2>
+                <div class="product-meta">
+                    <span class="badge-gold">ذهب خالص</span>
+                </div>
+                
+                <p class="product-single-price" id="p-price">1,250 ريال</p>
+                
+                <div class="specs-table">
+                    <h3>المواصفات الفنية للقطعة:</h3>
+                    <ul>
+                        <li><strong>العيار:</strong> <span id="p-caliber">21 قيراط</span></li>
+                        <li><strong>الوزن التقريبي:</strong> <span id="p-weight">4.5 جرام</span></li>
+                        <li><strong>نوع الحجر:</strong> <span>بدون فصوص (ذهب خالص)</span></li>
+                        <li><strong>حالة التوفر:</strong> <span style="color: green; font-weight: bold;">متوفر بالمخزن</span></li>
+                    </ul>
+                </div>
+
+                <p class="product-description">
+                    خاتم مصاغ بعناية فائقة يجمع بين عراقة التصميم وتفاصيل النقش الملكي الحديث. يناسب الإطلالات اليومية والمناسبات السعيدة، صُمم ليدوم بريقه طويلاً.
+                </p>
+
+                <div class="purchase-actions">
+                    <div class="qty-selector">
+                        <label for="product-qty">الكمية:</label>
+                        <input type="number" id="product-qty" value="1" min="1" max="5">
+                    </div>
+                    <button class="btn-main-add" id="add-to-cart-trigger">إضافة إلى سلة المشتريات 🛒</button>
+                </div>
+
+                <div class="trust-badge">
+                    🛡️ الفحص والاستلام يد بيد - الدفع عند الاستلام كامل التكلفة بعد المعاينة.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 متجر الجوهرة للمجوهرات. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="C:\Users\Lenovo\Desktop\DanaWeb\js\product.js"></script>
+</body>
+</html>

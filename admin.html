@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | إضافة منتج جديد</title>
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\style.css">
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\admin.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>لوحة تحكم <span>الجوهرة</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" target="_blank">معاينة المتجر 👁️</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h2>إضافة قطعة إكسسوارات جديدة للمخزن</h2>
+        <p class="admin-subtitle">أدخل بيانات قطعة الذهب بدقة لتظهر فوراً في الصفحة الرئيسية للمتجر.</p>
+
+        <form id="add-product-form" class="admin-form">
+            <div class="form-group">
+                <label for="prod-name">اسم قطعة الذهب:</label>
+                <input type="text" id="prod-name" placeholder="مثال: سوار لوريت عيار 21" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="prod-price">السعر (بالريال):</label>
+                    <input type="number" id="prod-price" placeholder="مثال: 1500" required>
+                </div>
+                <div class="form-group">
+                    <label for="prod-stock">الكمية المتوفرة (المخزون):</label>
+                    <input type="number" id="prod-stock" placeholder="مثال: 5" min="1" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="prod-caliber">عيار الذهب:</label>
+                    <select id="prod-caliber">
+                        <option value="21 قيراط">21 قيراط</option>
+                        <option value="18 قيراط">18 قيراط</option>
+                        <option value="24 قيراط">24 قيراط</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prod-weight">الوزن التقريبي (جرام):</label>
+                    <input type="text" id="prod-weight" placeholder="مثال: 4.2 جرام" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="prod-caliber">النوع:</label>
+                    <select id="prod-caliber">
+                        <option value="خواتم">خواتم</option>
+                        <option value="أساور">أساور</option>
+                        <option value="سلاسل">سلاسل</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="prod-img-main">رابط الصورة الأصلية (الرئيسية):</label>
+                <input type="text" id="prod-img-main" placeholder="images/اسم-الصورة.jpg أو رابط ويب" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prod-img-thumb">رابط الصورة الإضافية (زاوية أخرى):</label>
+                <input type="text" id="prod-img-thumb" placeholder="images/اسم-الصورة2.jpg (اختياري)">
+            </div>
+
+            <div class="form-group">
+                <label for="prod-desc">وصف وتفاصيل القطعة:</label>
+                <textarea id="prod-desc" rows="4" placeholder="اكتب هنا تفاصيل التصميم والنقش والشعور بالقطعة..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit-prod">نشر القطعة في المتجر الآن ✨</button>
+        </form>
+
+
+    </main> <section class="admin-table-container" style="padding: 0 15% 50px 15%; background-color: #f5f5f5;">
+        <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h3 style="margin-bottom: 20px; font-size: 20px; color: #1a1a1a; border-bottom: 2px solid #c5a059; padding-bottom: 10px;">إدارة وحوكمة المخزون الحالي</h3>
+            <div id="admin-table-wrapper"></div>
+        </div>
+    </section>
+
+    <script src="C:\Users\Lenovo\Desktop\DanaWeb\js\admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+/* تنسيقات صفحة سلة المشتريات */
+
+.cart-container { 
+    padding: 60px 8%; 
+    min-height: 60vh; 
+}
+
+.cart-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 20px; 
+    text-align: right; 
+}
+
+.cart-table th, .cart-table td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+}
+
+.cart-table th { 
+    background-color: #1a1a1a; 
+    color: #f1e5cd; 
+}
+
+.cart-table img { 
+    width: 60px; 
+    height: 60px; 
+    object-fit: cover; 
+    border-radius: 4px; 
+}
+
+.quantity-control { 
+    display: flex; 
+    gap: 10px; 
+    align-items: center; 
+}
+
+.btn-qty { 
+    background: #1a1a1a; 
+    color: #fff; 
+    border: none; 
+    width: 25px; 
+    height: 25px; 
+    cursor: pointer; 
+    border-radius: 3px; 
+    font-weight: bold;
+}
+
+.btn-qty:hover {
+    background-color: #c5a059;
+    color: #1a1a1a;
+}
+
+.btn-delete {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.btn-delete:hover {
+    background-color: #cc0000;
+}
+
+.cart-summary { 
+    background-color: #ffffff; 
+    padding: 25px; 
+    border: 1px solid #eee; 
+    border-radius: 8px; 
+    margin-top: 30px; 
+    width: 350px; 
+    margin-right: auto; /* لدفع الصندوق إلى يسار الصفحة تلقائياً */
+    text-align: right; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.cart-summary h3 { 
+    border-bottom: 2px solid #c5a059; 
+    padding-bottom: 10px; 
+    margin-bottom: 15px; 
+    color: #1a1a1a;
+}
+
+.summary-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 12px; 
+    font-size: 16px; 
+}
+
+.summary-row.total { 
+    font-weight: bold; 
+    color: #c5a059; 
+    font-size: 20px; 
+    border-top: 1px solid #ddd; 
+    padding-top: 15px; 
+    margin-top: 15px;
+}
+
+.btn-checkout { 
+    display: block; 
+    background-color: #c5a059; 
+    color: #1a1a1a; 
+    text-align: center; 
+    padding: 12px; 
+    text-decoration: none; 
+    font-weight: bold; 
+    border-radius: 4px; 
+    margin-top: 20px; 
+    transition: all 0.3s; 
+}
+
+.btn-checkout:hover { 
+    background-color: #1a1a1a; 
+    color: #fff; 
+}
+
+.empty-msg { 
+    text-align: center; 
+    font-size: 18px; 
+    color: #777; 
+    margin-top: 60px; 
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر الجوهرة | إكسسوارات ذهب فاخرة</title>
+    <!-- سنقوم بربط ملف الـ CSS هنا لاحقاً لتنسيق الألوان والخطوط الفخمة -->
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\style.css">
+</head>
+<body>
+
+    <!-- 1. الهيدر (شريط التنقل العلوي) -->
+    <header>
+        <div class="logo">
+            <h1>الجوهرة <span>للمجوهرات</span></h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active" data-key="nav-home">الرئيسية</a></li>
+                <li><a href="#categories" data-key="nav-categories">الأقسام</a></li>
+                <li><a href="#products" data-key="nav-products">المنتجات</a></li>
+                <li><button id="lang-switcher" class="lang-btn">English</button></li>
+            </ul>
+        </nav>
+        <!-- أيقونة السلة مع عداد رقمي للمنتجات المضافة -->
+        <div class="cart-icon">
+            <a href="cart.html">
+                🛒 سلة المشتريات (<span id="cart-count">0</span>)
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. البانر الرئيسي (Hero Section) لإبهار الزائر -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2 data-key="hero-title">أناقة الذهب الخالص تكتمل بكِ</h2>
+                <p data-key="hero-desc">اكتشفي تشكيلتنا الجديدة من أرقى إكسسوارات الذهب المصممة خصيصاً لتناسب ذوقك الرفيع.</p>
+                <a href="#products" class="btn" data-key="hero-btn">تصفح التشكيلة الآن</a>
+            </div>
+        </section>
+
+        <!-- 3. قسم الأقسام السريعة -->
+        <section id="categories" class="categories">
+            <h2 data-key="section-categories">تسوّقي حسب القسم</h2>
+            <div class="categories-grid">
+                <div class="category-item active-cat" data-category="all">
+                    <h3>الكل</h3>
+                </div>
+                <div class="category-item" data-category="خواتم">
+                    <h3>خواتم</h3>
+                </div>
+                <div class="category-item" data-category="أساور">
+                    <h3>أساور</h3>
+                </div>
+                <div class="category-item" data-category="سلاسل">
+                    <h3>سلاسل</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. شبكة عرض المنتجات المميزة (Products Grid) -->
+        <section id="products" class="products">
+            <h2 data-key="section-products">أحدث القطع والمجوهرات</h2>
+            <div class="products-grid">
+
+                <!-- المنتج الأول -->
+                <div class="product-card" data-category="خواتم">
+                    <img src="C:\Users\Lenovo\Desktop\DanaWeb\images\bracelet1.jpeg" alt="خاتم ذهب عيار 21">
+                    <h3>خاتم ملكي عيار 21</h3>
+                    <p class="product-details">الوزن التقريبي: 4.5 جرام</p>
+                    <p class="product-stock-status">المخزون المتاح: <span>3 قطع</span></p>
+                    <p class="price">1,250 ريال</p>
+                    <div class="product-buttons">
+                        <a href="product.html?id=1" class="btn-secondary">عرض التفاصيل</a>
+                        <button class="btn-add-cart">أضف للسلة 🛒</button>
+                    </div>
+                </div>
+
+                <!-- المنتج الثاني -->
+                <div class="product-card" data-category="أساور">
+                    <img src="C:\Users\Lenovo\Desktop\DanaWeb\images\bracelet1.jpeg" alt="سوار ذهب مجدول">
+                    <h3>سوار ذهب مجدول عيار 18</h3>
+                    <p class="product-details">الوزن التقريبي: 8.2 جرام</p>
+                    <p class="product-stock-status">المخزون المتاح: <span>3 قطع</span></p>
+                    <p class="price">2,100 ريال</p>
+                    <div class="product-buttons">
+                        <a href="product.html?id=2" class="btn-secondary">عرض التفاصيل</a>
+                        <button class="btn-add-cart">أضف للسلة 🛒</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- 5. الفوتر (أسفل الموقع) -->
+    <footer id="contact">
+        <div class="footer-info">
+            <p>&copy; 2026 متجر الجوهرة للمجوهرات. جميع الحقوق محفوظة.</p>
+            <p>جميع المعاملات تتم عبر ميزة <strong>الدفع عند الاستلام</strong> لضمان أمانكم وثقتكم.</p>
+        </div>
+    </footer>
+
+    <!-- سنقوم بربط ملف الـ JavaScript هنا لاحقاً لتشغيل السلة والعداد -->
+    <script src="C:\Users\Lenovo\Desktop\DanaWeb\js\main.js"></script>
+</body>
+</html>

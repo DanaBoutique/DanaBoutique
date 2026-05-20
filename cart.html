@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة المشتريات | متجر الجوهرة</title>
+    <!-- نربط نفس ملف الـ CSS الأساسي للحفاظ على هوية الألوان الفخمة -->
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\style.css">
+
+    <!-- أضفنا تنسيقاً بسيطاً خاصاً بجدول السلة هنا لسرعة العمل -->
+    <link rel="stylesheet" href="C:\Users\Lenovo\Desktop\DanaWeb\CSS\cart.css">
+
+</head>
+<body>
+
+    <!-- الهيدر (نفس هيدر الصفحة الرئيسية لتناسق الموقع) -->
+    <header>
+        <div class="logo">
+            <h1>الجوهرة <span>للمجوهرات</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="index.html#categories">الأقسام</a></li>
+                <li><a href="index.html#products">المنتجات</a></li>
+                <li><button id="lang-switcher" class="lang-btn">English</button></li>
+            </ul>
+        </nav>
+        <div class="cart-icon">
+            <a href="cart.html" class="active">🛒 السلة (<span id="cart-count">0</span>)</a>
+        </div>
+    </header>
+
+    <main class="cart-container">
+        <h2>سلة المشتريات الخاصة بك</h2>
+        
+        <!-- هنا سيتم عرض جدول المنتجات برمجياً بواسطة الجافاسكربت -->
+        <div id="cart-content-wrapper"></div>
+
+        <!-- ملخص الحساب الإجمالي -->
+        <div class="cart-summary" id="cart-summary-box" style="display: none;">
+            <h3>ملخص الطلب</h3>
+            <div class="summary-row">
+                <span>إجمالي المنتجات:</span>
+                <span id="subtotal">0 ريال</span>
+            </div>
+            <div class="summary-row">
+                <span>الشحن والتوصيل:</span>
+                <strong>مجاني (بمناسبة الافتتاح)</strong>
+            </div>
+            <div class="summary-row total">
+                <span>الإجمالي النهائي:</span>
+                <span id="final-total">0 ريال</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout">الانتقال لتأكيد الطلب (الدفع عند الاستلام)</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 متجر الجوهرة للمجوهرات. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- نربط ملف الجافاسكربت الجديد الخاص بالسلة هنا -->
+    <script src="C:\Users\Lenovo\Desktop\DanaWeb\js\cart.js"></script>
+</body>
+</html>
