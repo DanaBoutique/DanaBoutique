@@ -1,0 +1,83 @@
+/* تنسيقات لوحة تحكم إدارة المنتجات */
+
+.admin-container {
+    padding: 50px 15%;
+    background-color: #f5f5f5;
+    min-height: 90vh;
+}
+
+.admin-container h2 {
+    font-size: 26px;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.admin-subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.admin-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-top: 4px solid #c5a059;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.admin-form label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #1a1a1a;
+}
+
+.admin-form input, .admin-form select, .admin-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus {
+    border-color: #c5a059;
+    outline: none;
+    box-shadow: 0 0 5px rgba(197, 160, 89, 0.2);
+}
+
+.btn-submit-prod {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-submit-prod:hover {
+    background-color: #c5a059;
+    color: #1a1a1a;
+}
