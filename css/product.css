@@ -207,3 +207,57 @@
     border-radius: 4px;
     text-align: center;
 }
+
+/* ========================================
+   Responsive - صفحة المنتج
+   ======================================== */
+
+@media (max-width: 768px) {
+    .product-single-wrapper {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    .product-gallery,
+    .product-info-box {
+        width: 100%;
+        padding: 0;
+    }
+    
+    .main-image-box img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .thumbnails-container {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .thumb-img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .product-title {
+        font-size: 20px;
+        margin-top: 20px;
+    }
+    
+    .product-single-price {
+        font-size: 24px;
+    }
+    
+    .purchase-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .qty-selector {
+        width: 100%;
+    }
+    
+    .btn-main-add {
+        width: 100%;
+    }
+}
