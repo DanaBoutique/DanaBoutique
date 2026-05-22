@@ -1,181 +1,54 @@
-// ========================================
-// تحميل السلة من الذاكرة المحلية
-// ========================================
-let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
-
-// ========================================
-// عند تحميل الصفحة
-// ========================================
-document.addEventListener('DOMContentLoaded', () => {
-    renderCart();
-    updateGlobalCartCount();
-});
-
-// ========================================
-// تحديث عداد السلة في الهيدر
-// ========================================
-function updateGlobalCartCount() {
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-        cartCountElement.innerText = totalItems;
-    }
-}
-
-// ========================================
-// عرض المنتجات داخل صفحة السلة
-// ========================================
-function renderCart() {
-    const wrapper = document.getElementById('cart-content-wrapper');
-    const summaryBox = document.getElementById('cart-summary-box');
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة المشتريات | دانه بوتيك</title>
     
-    if (!wrapper) return;
-    
-    // تحديث العداد العلوي
-    updateGlobalCartCount();
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+</head>
+<body>
 
-    // إذا كانت السلة فارغة
-    if (cart.length === 0) {
-        wrapper.innerHTML = `
-            <div class="empty-cart-message" style="text-align: center; padding: 60px 20px;">
-                <p style="font-size: 48px; margin-bottom: 20px;">🛒</p>
-                <p style="font-size: 18px; color: #777;">سلة المشتريات فارغة حالياً..</p>
-                <p style="margin-top: 10px; color: #999;">اذهبي للصفحة الرئيسية واختاري ما يناسبك ✨</p>
-                <a href="../index.html" style="display: inline-block; margin-top: 25px; padding: 10px 25px; background: #c5a059; color: #1a1a1a; text-decoration: none; border-radius: 8px;">تسوقي الآن</a>
-            </div>
-        `;
-        if (summaryBox) summaryBox.style.display = 'none';
-        return;
-    }
-
-    // إظهار ملخص الطلب
-    if (summaryBox) summaryBox.style.display = 'block';
-    
-    // بناء جدول المنتجات
-    let tableHTML = `
-        <div style="overflow-x: auto;">
-            <table class="cart-table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #1a1a1a; color: #f1e5cd;">
-                        <th style="padding: 12px;">المنتج</th>
-                        <th style="padding: 12px;">الاسم</th>
-                        <th style="padding: 12px;">السعر</th>
-                        <th style="padding: 12px;">الكمية</th>
-                        <th style="padding: 12px;">الإجمالي</th>
-                        <th style="padding: 12px;">إجراء</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-
-    let subtotal = 0;
-
-    cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-
-        tableHTML += `
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 12px; text-align: center;">
-                    <img src="${item.image || 'https://via.placeholder.com/60'}" 
-                         alt="${escapeHtml(item.name)}" 
-                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"
-                         onerror="this.src='https://via.placeholder.com/60'">
-                </td>
-                <td style="padding: 12px;">
-                    <strong>${escapeHtml(item.name)}</strong>
-                </td>
-                <td style="padding: 12px;">
-                    ${item.price.toLocaleString()} دينار
-                </td>
-                <td style="padding: 12px;">
-                    <div class="quantity-control" style="display: flex; gap: 8px; align-items: center;">
-                        <button class="btn-qty" onclick="changeQuantity(${index}, -1)" 
-                                style="background: #1a1a1a; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer;">
-                            -
-                        </button>
-                        <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
-                        <button class="btn-qty" onclick="changeQuantity(${index}, 1)" 
-                                style="background: #1a1a1a; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer;">
-                            +
-                        </button>
-                    </div>
-                </td>
-                <td style="padding: 12px; color: #c5a059; font-weight: bold;">
-                    ${itemTotal.toLocaleString()} دينار
-                </td>
-                <td style="padding: 12px;">
-                    <button class="btn-delete" onclick="removeItem(${index})" 
-                            style="background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer;">
-                        🗑️ حذف
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
-
-    tableHTML += `
-                </tbody>
-            </table>
+    <header>
+        <div class="logo">
+            <h1>دانه <span>بوتيك</span></h1>
         </div>
-    `;
-    
-    wrapper.innerHTML = tableHTML;
+        <nav>
+            <ul>
+                <li><a href="../index.html">الرئيسية</a></li>
+                <li><a href="../index.html#categories">الأقسام</a></li>
+                <li><a href="../index.html#products">المنتجات</a></li>
+            </ul>
+        </nav>
+        <div class="cart-icon">
+            <a href="cart.html" class="active">🛒 السلة (<span id="cart-count">0</span>)</a>
+        </div>
+    </header>
 
-    // تحديث المبالغ المالية في الملخص
-    const subtotalElement = document.getElementById('subtotal');
-    if (subtotalElement) {
-        subtotalElement.innerText = `${subtotal.toLocaleString()} دينار`;
-    }
-}
+    <main class="cart-container">
+        <h2>🛍️ سلة المشتريات الخاصة بك</h2>
 
-// ========================================
-// تغيير الكمية (+ أو -)
-// ========================================
-window.changeQuantity = function(index, change) {
-    if (!cart[index]) return;
-    
-    const newQuantity = cart[index].quantity + change;
-    
-    if (newQuantity <= 0) {
-        if (confirm(`هل تريد حذف ${cart[index].name} من السلة؟`)) {
-            cart.splice(index, 1);
-        } else {
-            return;
-        }
-    } else {
-        cart[index].quantity = newQuantity;
-    }
-    
-    saveAndRefresh();
-}
+        <div id="cart-content-wrapper">
+            <!-- سيتم عرض محتويات السلة هنا بواسطة JavaScript -->
+        </div>
 
-// ========================================
-// حذف منتج بالكامل
-// ========================================
-window.removeItem = function(index) {
-    if (!cart[index]) return;
-    
-    if (confirm(`هل تريد حذف ${cart[index].name} من السلة؟`)) {
-        cart.splice(index, 1);
-        saveAndRefresh();
-    }
-}
+        <div class="cart-summary" id="cart-summary-box" style="display: none;">
+            <h3>📋 ملخص الطلب</h3>
+            <div class="summary-row">
+                <span>💰 إجمالي المنتجات:</span>
+                <span id="subtotal">0 دينار</span>
+            </div>
+            
+            <a href="checkout.html" class="btn-checkout">📦 الانتقال لتأكيد الطلب (الدفع عند الاستلام)</a>
+        </div>
+    </main>
 
-// ========================================
-// حفظ التغييرات وإعادة عرض السلة
-// ========================================
-function saveAndRefresh() {
-    localStorage.setItem('gold_store_cart', JSON.stringify(cart));
-    renderCart();
-}
+    <footer>
+        <p>&copy; 2026 متجر دانه بوتيك للمجوهرات. جميع الحقوق محفوظة.</p>
+    </footer>
 
-// ========================================
-// دالة مساعدة لتنظيف النص من HTML
-// ========================================
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+    <script src="../js/cart.js"></script>
+</body>
+</html>
