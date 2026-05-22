@@ -204,6 +204,9 @@ function updateDeliveryFee() {
 // ========================================
 // عرض الفاتورة في الجانب الأيسر (مرة واحدة فقط)
 // ========================================
+// ========================================
+// عرض الفاتورة في الجانب الأيسر بشكل منظم
+// ========================================
 function renderCheckoutSummary() {
     const listContainer = document.getElementById('checkout-items-list');
     const finalPriceElement = document.getElementById('checkout-final-price');
@@ -216,20 +219,40 @@ function renderCheckoutSummary() {
         return;
     }
 
-    // ✅ بناء محتوى الملخص مرة واحدة فقط
+    // 1. عرض المنتجات فقط داخل الحاوية دون تكرار أسطر الإجمالي بالأسفل
     let itemsHTML = '';
-    let total = 0;
+    let subtotal = 0;
 
     cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
-        total += itemTotal;
+        subtotal += itemTotal;
         itemsHTML += `
-            <div class="checkout-item-summary" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                <span>${escapeText(item.name)} × ${item.quantity}</span>
-                <strong style="color: #ca059;">${itemTotal.toLocaleString()} دينار</strong>
+            <div class="checkout-item-summary" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">
+                <span style="font-size: 15px; color: #333;">${escapeText(item.name)} <span style="color: #888; font-size: 13px;">× ${item.quantity}</span></span>
+                <strong style="color: #333; font-weight: 600;">${itemTotal.toLocaleString()} دينار</strong>
             </div>
         `;
     });
+
+    if (listContainer) {
+        listContainer.innerHTML = itemsHTML;
+    }
+
+    // 2. تحديث الحقول المالية الثابتة المتواجدة في صفحة الـ HTML
+    // جلب قيمة المحافظة الحالية لمعرفة قيمة التوصيل بدقة عند تحميل الصفحة
+    const citySelect = document.getElementById('cust-city');
+    const selectedCity = citySelect ? citySelect.value : '';
+    const deliveryFee = selectedCity ? getDeliveryFee(selectedCity) : 0; 
+    const grandTotal = subtotal + deliveryFee;
+
+    // تحديث نص المجموع النهائي الأساسي في الصفحة
+    if (finalPriceElement) {
+        finalPriceElement.innerText = `${grandTotal.toLocaleString()} دينار`;
+    }
+
+    // تشغيل دالة التحديث الشاملة لضمان مزامنة الرسوم مع الواجهة فوراً
+    updateDeliveryFee();
+}
 
     // ✅ إضافة سطر رسوم التوصيل (مرة واحدة)
     itemsHTML += `
