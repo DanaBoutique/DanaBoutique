@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // إضافة مستمع لتغير المحافظة
     const citySelect = document.getElementById('cust-city');
     if (citySelect) {
-        citySelect.addEventListener('change', updateDeliveryFee);
+        citySelect.addEventListener('change', () => {
+            updateDeliveryFee();
+        });
     }
 
     const checkoutForm = document.getElementById('checkout-form');
@@ -20,19 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // التحقق من السلة
             if (cart.length === 0) {
                 alert('❌ سلتك فارغة، لا يمكن إتمام الطلب!');
                 return;
             }
 
-            // جمع بيانات العميل من المدخلات
             const name = document.getElementById('cust-name').value.trim();
             const phone = document.getElementById('cust-phone').value.trim();
             const city = document.getElementById('cust-city').value;
             const address = document.getElementById('cust-address').value.trim();
 
-            // التحقق من صحة البيانات
             if (!name) {
                 alert('الرجاء إدخال الاسم الكامل');
                 return;
@@ -53,31 +52,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // التحقق من صحة رقم الهاتف (أردني)
             const phoneRegex = /^(07|07[7-9]|079|078|077)[0-9]{7}$/;
             if (!phoneRegex.test(phone)) {
                 alert('الرجاء إدخال رقم هاتف أردني صحيح (مثال: 0791234567)');
                 return;
             }
 
-            // حساب الإجمالي مع رسوم التوصيل
             const subtotal = calculateSubtotal();
             const deliveryFee = getDeliveryFee(city);
             const totalOrderPrice = subtotal + deliveryFee;
 
-            // بناء نص الفاتورة
             let rawMessage = buildWhatsAppMessage(name, phone, city, address, subtotal, deliveryFee, totalOrderPrice);
-
-            // تشفير النص
             const encodedMessage = encodeURIComponent(rawMessage);
-
-            // رقم الواتساب (بدون + وبدون مسافات)
             const myWhatsAppNumber = "962782728437";
-
-            // بناء الرابط النهائي
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${myWhatsAppNumber}&text=${encodedMessage}`;
 
-            // تأكيد قبل الإرسال
             if (confirm(`✅ هل أنت متأكد من رغبتك بتأكيد الطلب؟
 
 المجموع: ${subtotal.toLocaleString()} دينار
@@ -86,13 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 سيتم تحويلك إلى واتساب لتأكيد الطلب.`)) {
                 
-                // تفريغ السلة من ذاكرة المتصفح بعد الشراء
                 localStorage.removeItem('gold_store_cart');
-                
-                // تحديث السلة في المتغير
                 cart = [];
-                
-                // التوجيه إلى الواتساب
                 window.location.href = whatsappUrl;
             }
         });
@@ -138,7 +122,7 @@ function buildWhatsAppMessage(name, phone, city, address, subtotal, deliveryFee,
 }
 
 // ========================================
-// حساب المجموع الفرعي (بدون توصيل)
+// حساب المجموع الفرعي
 // ========================================
 function calculateSubtotal() {
     let total = 0;
@@ -149,25 +133,23 @@ function calculateSubtotal() {
 }
 
 // ========================================
-// حساب رسوم التوصيل حسب المحافظة
+// حساب رسوم التوصيل
 // ========================================
 function getDeliveryFee(city) {
-    // عمان: توصيل مجاني
-    if (city === 'عمان') {
-        return 0;
-    }
-    // باقي المحافظات: 5 دينار
+    if (city === 'عمان') return 0;
     return 5;
 }
 
 // ========================================
-// تحديث رسوم التوصيل في الواجهة
+// تحديث رسوم التوصيل والإجمالي
 // ========================================
 function updateDeliveryFee() {
     const citySelect = document.getElementById('cust-city');
     const deliveryFeeGroup = document.getElementById('delivery-fee-group');
     const deliveryFeeAmount = document.getElementById('delivery-fee-amount');
     const finalPriceElement = document.getElementById('checkout-final-price');
+    const deliveryRow = document.getElementById('checkout-delivery-row');
+    const grandTotalRow = document.getElementById('checkout-grand-total');
 
     if (!citySelect) return;
     
@@ -198,8 +180,20 @@ function updateDeliveryFee() {
             finalPriceElement.innerText = `${total.toLocaleString()} دينار`;
         }
 
-        // إضافة تفاصيل التوصيل في الملخص
-        updateSummaryWithDelivery(deliveryFee);
+        // تحديث سطر رسوم التوصيل والإجمالي في الملخص
+        if (deliveryRow) {
+            const deliverySpan = deliveryRow.querySelector('.delivery-fee-value');
+            if (deliverySpan) {
+                deliverySpan.innerText = deliveryFee === 0 ? 'مجاني' : deliveryFee + ' دينار';
+            }
+        }
+        
+        if (grandTotalRow) {
+            const totalSpan = grandTotalRow.querySelector('.grand-total-value');
+            if (totalSpan) {
+                totalSpan.innerText = `${total.toLocaleString()} دينار`;
+            }
+        }
     } else {
         if (deliveryFeeGroup) {
             deliveryFeeGroup.style.display = 'none';
@@ -208,43 +202,7 @@ function updateDeliveryFee() {
 }
 
 // ========================================
-// تحديث الملخص مع رسوم التوصيل
-// ========================================
-function updateSummaryWithDelivery(deliveryFee) {
-    const listContainer = document.getElementById('checkout-items-list');
-    if (!listContainer) return;
-    
-    const subtotal = calculateSubtotal();
-
-    let itemsHTML = '';
-
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        itemsHTML += `
-            <div class="checkout-item-summary" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                <span>${escapeText(item.name)} × ${item.quantity}</span>
-                <strong style="color: #c5a059;">${itemTotal.toLocaleString()} دينار</strong>
-            </div>
-        `;
-    });
-
-    // إضافة سطر رسوم التوصيل
-    itemsHTML += `
-        <div class="checkout-delivery-row" style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; color: #b8860b;">
-            <span>🚚 رسوم التوصيل:</span>
-            <strong>${deliveryFee === 0 ? 'مجاني' : deliveryFee + ' دينار'}</strong>
-        </div>
-        <div class="checkout-grand-total" style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px solid #c5a059; font-weight: bold; font-size: 18px;">
-            <span>💰 الإجمالي النهائي:</span>
-            <strong style="color: #c5a059;">${(subtotal + deliveryFee).toLocaleString()} دينار</strong>
-        </div>
-    `;
-
-    listContainer.innerHTML = itemsHTML;
-}
-
-// ========================================
-// عرض الفاتورة في الجانب الأيسر
+// عرض الفاتورة في الجانب الأيسر (مرة واحدة فقط)
 // ========================================
 function renderCheckoutSummary() {
     const listContainer = document.getElementById('checkout-items-list');
@@ -258,6 +216,7 @@ function renderCheckoutSummary() {
         return;
     }
 
+    // ✅ بناء محتوى الملخص مرة واحدة فقط
     let itemsHTML = '';
     let total = 0;
 
@@ -272,14 +231,25 @@ function renderCheckoutSummary() {
         `;
     });
 
+    // ✅ إضافة سطر رسوم التوصيل (مرة واحدة)
+    itemsHTML += `
+        <div id="checkout-delivery-row" class="checkout-delivery-row" style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; color: #b8860b;">
+            <span>🚚 رسوم التوصيل:</span>
+            <strong class="delivery-fee-value">0 دينار</strong>
+        </div>
+        <div id="checkout-grand-total" class="checkout-grand-total" style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px solid #c5a059; font-weight: bold; font-size: 18px;">
+            <span>💰 الإجمالي النهائي:</span>
+            <strong class="grand-total-value" style="color: #c5a059;">${total.toLocaleString()} دينار</strong>
+        </div>
+    `;
+
     if (listContainer) listContainer.innerHTML = itemsHTML;
 
-    // عرض الإجمالي بدون توصيل في البداية
     if (finalPriceElement) {
         finalPriceElement.innerText = `${total.toLocaleString()} دينار`;
     }
     
-    // التحقق من وجود محافظة محددة مسبقاً
+    // تحديث رسوم التوصيل إذا كانت هناك محافظة محددة
     const citySelect = document.getElementById('cust-city');
     if (citySelect && citySelect.value) {
         updateDeliveryFee();
