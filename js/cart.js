@@ -49,7 +49,7 @@ function renderCart() {
             <tr>
                 <td><img src="${item.image}" alt="${item.name}"></td>
                 <td><strong>${item.name}</strong></td>
-                <td>${item.price.toLocaleString()} ريال</td>
+                <td>${item.price.toLocaleString()} دينار</td>
                 <td>
                     <div class="quantity-control">
                         <button class="btn-qty" onclick="changeQuantity(${index}, -1)">-</button>
@@ -57,7 +57,7 @@ function renderCart() {
                         <button class="btn-qty" onclick="changeQuantity(${index}, 1)">+</button>
                     </div>
                 </td>
-                <td>${itemTotal.toLocaleString()} ريال</td>
+                <td>${itemTotal.toLocaleString()} دينار</td>
                 <td><button class="btn-delete" onclick="removeItem(${index})">حذف 🗑️</button></td>
             </tr>
         `;
@@ -67,8 +67,8 @@ function renderCart() {
     wrapper.innerHTML = tableHTML;
 
     // تحديث المبالغ المالية في الملخص
-    document.getElementById('subtotal').innerText = `${subtotal.toLocaleString()} ريال`;
-    document.getElementById('final-total').innerText = `${subtotal.toLocaleString()} ريال`;
+    document.getElementById('subtotal').innerText = `${subtotal.toLocaleString()} دينار`;
+    document.getElementById('final-total').innerText = `${subtotal.toLocaleString()} دينار`;
 }
 
 // دالة لتغيير الكمية (+ أو -)
