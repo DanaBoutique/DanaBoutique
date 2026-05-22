@@ -136,7 +136,7 @@ function calculateSubtotal() {
 // حساب رسوم التوصيل
 // ========================================
 function getDeliveryFee(city) {
-    if (city === 'عمان') return 2;
+    // جميع المحافظات: 2 دينار
     return 2;
 }
 
