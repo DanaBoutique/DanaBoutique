@@ -130,3 +130,43 @@
         flex-direction: column-reverse;
     }
 }
+/* ========================================
+   Responsive - صفحة تأكيد الطلب
+   ======================================== */
+
+@media (max-width: 768px) {
+    .checkout-wrapper {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    .checkout-form-box,
+    .checkout-summary-box {
+        width: 100%;
+        margin: 0 0 20px 0;
+    }
+    
+    .checkout-form-box h2 {
+        font-size: 20px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .btn-confirm-order {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .checkout-item-summary {
+        font-size: 14px;
+    }
+}
