@@ -1,42 +1,71 @@
+// ========================================
 // تحميل السلة من الذاكرة المحلية
+// ========================================
 let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
 
+// ========================================
+// عند تحميل الصفحة
+// ========================================
 document.addEventListener('DOMContentLoaded', () => {
     renderCart();
+    updateGlobalCartCount();
 });
 
-// دالة لعرض المنتجات داخل صفحة السلة
+// ========================================
+// تحديث عداد السلة في الهيدر
+// ========================================
+function updateGlobalCartCount() {
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        cartCountElement.innerText = totalItems;
+    }
+}
+
+// ========================================
+// عرض المنتجات داخل صفحة السلة
+// ========================================
 function renderCart() {
     const wrapper = document.getElementById('cart-content-wrapper');
     const summaryBox = document.getElementById('cart-summary-box');
-    const cartCount = document.getElementById('cart-count');
+    
+    // التحقق من وجود العناصر
+    if (!wrapper) return;
     
     // تحديث العداد العلوي
-    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-    cartCount.innerText = totalItems;
+    updateGlobalCartCount();
 
     // إذا كانت السلة فارغة
     if (cart.length === 0) {
-        wrapper.innerHTML = `<p class="empty-msg">سلة المشتريات فارغة حالياً.. اذهبي للصفحة الرئيسية واختاري ما يناسبك ✨</p>`;
-        summaryBox.style.display = 'none';
+        wrapper.innerHTML = `
+            <div class="empty-cart-message" style="text-align: center; padding: 60px 20px;">
+                <p style="font-size: 18px; color: #777;">🛍️ سلة المشتريات فارغة حالياً..</p>
+                <p style="margin-top: 10px;">اذهبي للصفحة الرئيسية واختاري ما يناسبك ✨</p>
+                <a href="../index.html" style="display: inline-block; margin-top: 20px; padding: 10px 25px; background: #c5a059; color: #1a1a1a; text-decoration: none; border-radius: 8px;">تسوقي الآن</a>
+            </div>
+        `;
+        if (summaryBox) summaryBox.style.display = 'none';
         return;
     }
 
-    // إذا كانت تحتوي على منتجات، نقوم ببناء الجدول
-    summaryBox.style.display = 'block';
+    // إظهار ملخص الطلب
+    if (summaryBox) summaryBox.style.display = 'block';
+    
+    // بناء جدول المنتجات
     let tableHTML = `
-        <table class="cart-table">
-            <thead>
-                <tr>
-                    <th>المنتج</th>
-                    <th>الاسم</th>
-                    <th>السعر</th>
-                    <th>الكمية</th>
-                    <th>الإجمالي</th>
-                    <th>إجراء</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div style="overflow-x: auto;">
+            <table class="cart-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #1a1a1a; color: #f1e5cd;">
+                        <th style="padding: 12px;">المنتج</th>
+                        <th style="padding: 12px;">الاسم</th>
+                        <th style="padding: 12px;">السعر</th>
+                        <th style="padding: 12px;">الكمية</th>
+                        <th style="padding: 12px;">الإجمالي</th>
+                        <th style="padding: 12px;">إجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
 
     let subtotal = 0;
@@ -46,51 +75,114 @@ function renderCart() {
         subtotal += itemTotal;
 
         tableHTML += `
-            <tr>
-                <td><img src="${item.image}" alt="${item.name}"></td>
-                <td><strong>${item.name}</strong></td>
-                <td>${item.price.toLocaleString()} دينار</td>
-                <td>
-                    <div class="quantity-control">
-                        <button class="btn-qty" onclick="changeQuantity(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="btn-qty" onclick="changeQuantity(${index}, 1)">+</button>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px; text-align: center;">
+                    <img src="${item.image || 'https://via.placeholder.com/60'}" 
+                         alt="${escapeHtml(item.name)}" 
+                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"
+                         onerror="this.src='https://via.placeholder.com/60'">
+                </td>
+                <td style="padding: 12px;">
+                    <strong>${escapeHtml(item.name)}</strong>
+                </td>
+                <td style="padding: 12px;">
+                    ${item.price.toLocaleString()} دينار
+                </td>
+                <td style="padding: 12px;">
+                    <div class="quantity-control" style="display: flex; gap: 8px; align-items: center;">
+                        <button class="btn-qty" onclick="changeQuantity(${index}, -1)" 
+                                style="background: #1a1a1a; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer;">
+                            -
+                        </button>
+                        <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
+                        <button class="btn-qty" onclick="changeQuantity(${index}, 1)" 
+                                style="background: #1a1a1a; color: white; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer;">
+                            +
+                        </button>
                     </div>
                 </td>
-                <td>${itemTotal.toLocaleString()} دينار</td>
-                <td><button class="btn-delete" onclick="removeItem(${index})">حذف 🗑️</button></td>
+                <td style="padding: 12px; color: #c5a059; font-weight: bold;">
+                    ${itemTotal.toLocaleString()} دينار
+                </td>
+                <td style="padding: 12px;">
+                    <button class="btn-delete" onclick="removeItem(${index})" 
+                            style="background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer;">
+                        🗑️ حذف
+                    </button>
+                </td>
             </tr>
         `;
     });
 
-    tableHTML += `</tbody></table>`;
+    tableHTML += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
     wrapper.innerHTML = tableHTML;
 
     // تحديث المبالغ المالية في الملخص
-    document.getElementById('subtotal').innerText = `${subtotal.toLocaleString()} دينار`;
-    document.getElementById('final-total').innerText = `${subtotal.toLocaleString()} دينار`;
+    const subtotalElement = document.getElementById('subtotal');
+    if (subtotalElement) {
+        subtotalElement.innerText = `${subtotal.toLocaleString()} دينار`;
+    }
+    
+    // تحديث الإجمالي النهائي في الملخص
+    const finalTotalElement = document.getElementById('final-total');
+    if (finalTotalElement) {
+        finalTotalElement.innerText = `${subtotal.toLocaleString()} دينار`;
+    }
 }
 
-// دالة لتغيير الكمية (+ أو -)
+// ========================================
+// تغيير الكمية (+ أو -)
+// ========================================
 window.changeQuantity = function(index, change) {
-    cart[index].quantity += change;
+    if (!cart[index]) return;
     
-    // إذا قلّت الكمية عن 1 يتم حذف المنتج تلقائياً
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
+    const newQuantity = cart[index].quantity + change;
+    
+    // إذا كانت الكمية الجديدة أقل من 1، حذف المنتج
+    if (newQuantity <= 0) {
+        if (confirm(`هل تريد حذف ${cart[index].name} من السلة؟`)) {
+            cart.splice(index, 1);
+        } else {
+            return;
+        }
+    } else {
+        cart[index].quantity = newQuantity;
     }
     
     saveAndRefresh();
 }
 
-// دالة لحذف منتج تماماً بخلال زر الحذف
+// ========================================
+// حذف منتج بالكامل
+// ========================================
 window.removeItem = function(index) {
-    cart.splice(index, 1);
-    saveAndRefresh();
+    if (!cart[index]) return;
+    
+    if (confirm(`هل تريد حذف ${cart[index].name} من السلة؟`)) {
+        cart.splice(index, 1);
+        saveAndRefresh();
+    }
 }
 
-// حفظ التغييرات في الذاكرة وإعادة العرض
+// ========================================
+// حفظ التغييرات وإعادة عرض السلة
+// ========================================
 function saveAndRefresh() {
     localStorage.setItem('gold_store_cart', JSON.stringify(cart));
     renderCart();
+}
+
+// ========================================
+// دالة مساعدة لتنظيف النص من HTML
+// ========================================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
