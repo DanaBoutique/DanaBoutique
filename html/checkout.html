@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد الطلب | متجر الجوهرة</title>
+    <title>تأكيد الطلب |متجر دانه بوتيك</title>
     
     <link class="sub-category" rel="stylesheet" href="../css/style.css">
     <link class="sub-category" rel="stylesheet" href="../css/checkout.css">
@@ -12,7 +12,7 @@
 
     <header>
         <div class="logo">
-            <h1>الجوهرة <span>للمجوهرات</span></h1>
+            <h1>دانه <span>بوتيك</span></h1>
         </div>
         <nav>
             <ul>
@@ -32,26 +32,40 @@
                 <form id="checkout-form">
                     <div class="form-group">
                         <label for="cust-name">الاسم الكامل:</label>
-                        <input type="text" id="cust-name" placeholder="المشتري الثنائي أو الثلاثي" required>
+                        <input type="text" id="cust-name" placeholder="الاسم الثنائي" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="cust-phone">رقم الجوال (للتواصل عند التوصيل):</label>
-                        <input type="tel" id="cust-phone" placeholder="05xxxxxxxx" required>
+                        <label for="cust-phone">رقم الهاتف (للتواصل عند التوصيل):</label>
+                        <input type="tel" id="cust-phone" placeholder="07xxxxxxxx" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="cust-city">المدينة:</label>
-                        <input type="text" id="cust-city" placeholder="مثال: الرياض، جدة، الدمام" required>
+                        <label for="cust-city">المحافظة:</label>
+                        <select id="cust-city" required>
+                            <option value="">-- اختر المحافظة --</option>
+                            <option value="عمان">عمان</option>
+                            <option value="اربد">اربد</option>
+                            <option value="الزرقاء">الزرقاء</option>
+                            <option value="البلقاء">البلقاء (السلط)</option>
+                            <option value="الكرك">الكرك</option>
+                            <option value="مادبا">مادبا</option>
+                            <option value="جرش">جرش</option>
+                            <option value="عجلون">عجلون</option>
+                            <option value="المفرق">المفرق</option>
+                            <option value="الطفيلة">الطفيلة</option>
+                            <option value="معان">معان</option>
+                            <option value="العقبة">العقبة</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
                         <label for="cust-address">العنوان السكني بالتفصيل:</label>
-                        <textarea id="cust-address" rows="3" placeholder="اسم الحي، الشارع، رقم المنزل إن وُجد" required></textarea>
+                        <textarea id="cust-address" rows="3" placeholder="اسم المدينة, الحي، الشارع، رقم المنزل " required></textarea>
                     </div>
 
                     <div class="payment-method-badge">
-                        💵 <strong>طريقة الدفع المتاحة:</strong> الدفع عند الاستلام (يداً بيد بعد المعاينة والفحص).
+                        💵 <strong>طريقة الدفع المتاحة:</strong> الدفع عند الاستلام .
                     </div>
 
                     <button type="submit" class="btn-confirm-order">تثبيت وتأكيد الطلب الآن 👑</button>
@@ -62,10 +76,14 @@
                 <h3>ملخص الفاتورة</h3>
                 <div id="checkout-items-list">
                 </div>
+                <div class="form-group" id="delivery-fee-group" style="display: none;">
+                    <label>رسوم التوصيل:</label>
+                    <span id="delivery-fee-amount" style="font-weight: bold; color: #b8860b;">0 دينار</span>
+                </div>
                 <hr>
                 <div class="summary-total-row">
                     <span>الإجمالي النهائي:</span>
-                    <span id="checkout-final-price">0 ريال</span>
+                    <span id="checkout-final-price">0 دينار</span>
                 </div>
             </div>
 
