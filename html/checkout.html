@@ -74,20 +74,23 @@
                 </form>
             </div>
 
-            <div class="checkout-summary-box">
-                <h3>ملخص الفاتورة</h3>
-                <div id="checkout-items-list">
-                </div>
-                <div class="form-group" id="delivery-fee-group" style="display: none;">
-                    <label>رسوم التوصيل:</label>
-                    <span id="delivery-fee-amount" style="font-weight: bold; color: #b8860b;">0 دينار</span>
-                </div>
-                <hr>
-                <div class="summary-total-row">
-                    <span>الإجمالي النهائي:</span>
-                    <span id="checkout-final-price">0 دينار</span>
-                </div>
-            </div>
+          <div class="invoice-summary-box">
+    <h3>ملخص الفاتورة</h3>
+    
+    <div id="checkout-items-list"></div>
+    
+    <div class="totals-section" style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px;">
+        <div id="delivery-fee-group" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>🚚 رسوم التوصيل:</span>
+            <strong id="delivery-fee-amount">احسب عند اختيار المحافظة</strong>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-top: 10px; color: #c5a059;">
+            <span>💰 الإجمالي النهائي:</span>
+            <strong id="checkout-final-price">0 دينار</strong>
+        </div>
+    </div>
+</div>
 
         </div>
     </main>
