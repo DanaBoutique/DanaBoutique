@@ -1,4 +1,33 @@
+// ========================================
+// استيراد Firebase
+// ========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+    getFirestore, 
+    collection, 
+    getDocs 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// ========================================
+// إعدادات Firebase (استبدل بقيم مشروعك)
+// ========================================
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+// تهيئة Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const COLLECTION_NAME = "custom_products_list";
+
+// ========================================
 // قاموس الترجمة للمصطلحات الأساسية في الموقع
+// ========================================
 const translations = {
     ar: {
         "nav-home": "الرئيسية",
@@ -34,263 +63,208 @@ const translations = {
         "stock-text": "Available Stock:",
         "view-details": "View Details",
         "add-to-cart": "Add to Cart 🛒",
-        "currency": "SAR"
+        "currency": "JOD"
     }
 };
 
-// تحديد اللغة الافتراضية بناء على ذاكرة المتصفح أو العربية كخيار أول
+// تحديد اللغة الافتراضية
 let currentLang = localStorage.getItem('store_lang') || 'ar';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // تطبيق اللغة المحفوظة فور تحميل الصفحة
-    applyLanguage(currentLang);
+// تعريف مصفوفة السلة
+let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
+let allProducts = []; // تخزين جميع المنتجات من Firebase
 
+// ========================================
+// عند تحميل الصفحة
+// ========================================
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    // تطبيق اللغة
+    applyLanguage(currentLang);
+    
+    // إضافة مستمع زر اللغة
     const langBtn = document.getElementById('lang-switcher');
     if (langBtn) {
         langBtn.addEventListener('click', () => {
-            // تبديل اللغة عند الضغط على الزر
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             localStorage.setItem('store_lang', currentLang);
             applyLanguage(currentLang);
-            // إعادة تحميل خفيفة لتحديث المنتجات الديناميكية إذا وُجدت
-            window.location.reload();
+            // إعادة عرض المنتجات باللغة الجديدة
+            displayProducts(allProducts);
         });
     }
+    
+    // تحديث عداد السلة
+    updateCartCount();
+    
+    // تحميل المنتجات من Firebase
+    await loadProductsFromFirebase();
 });
 
-// دالة تطبيق الترجمة وتغيير اتجاه الصفحة
-function applyLanguage(lang) {
-    const htmlTag = document.documentElement;
-    const langBtn = document.getElementById('lang-switcher');
-
-    // 1. تغيير الاتجاه واللغة في وسم HTML الرئيسي
-    if (lang === 'en') {
-        htmlTag.setAttribute('dir', 'ltr');
-        htmlTag.setAttribute('lang', 'en');
-        if (langBtn) langBtn.innerText = 'العربية';
-    } else {
-        htmlTag.setAttribute('dir', 'rtl');
-        htmlTag.setAttribute('lang', 'ar');
-        if (langBtn) langBtn.innerText = 'English';
-    }
-
-    // 2. ترجمة العناصر الثابتة التي تحمل سمة data-key
-    const elementsToTranslate = document.querySelectorAll('[data-key]');
-    elementsToTranslate.forEach(el => {
-        const key = el.getAttribute('data-key');
-        if (translations[lang][key]) {
-            el.innerText = translations[lang][key];
-        }
-    });
-}// 1. تعريف مصفوفة السلة (تُحمل المنتجات من الذاكرة المحلية إذا كانت موجودة، أو تبدأ فارغة)
-let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
-
-// انتظر حتى يتم تحميل الصفحة بالكامل قبل تشغيل الأكواد
-document.addEventListener('DOMContentLoaded', () => {
-
-    // أ) تحديث عداد السلة في الهيدر فور فتح الموقع
-    updateCartCount();
-    /*
-=========================================
-عرض المنتجات القادمة من لوحة التحكم
-=========================================
-*/
-
-    const products =
-        JSON.parse(localStorage.getItem('custom_products_list')) || [];
-
-    const productsGrid =
-        document.querySelector('.products-grid');
-
-    /*
-    =========================================
-    عرض المنتجات المنشورة فقط
-    =========================================
-    */
-
-    const publishedProducts =
-        products.filter(product => product.published);
-
-    if (publishedProducts.length > 0 && productsGrid) {
-
-        productsGrid.innerHTML = '';
-
-        publishedProducts.forEach(product => {
-
-            productsGrid.innerHTML += `
-
-                <div
-                    class="product-card"
-                    data-category="${product.type}"
-                >
-
-                    <img
-                        src="${product.mainImage}"
-                        alt="${product.name}"
-
-                        onerror="
-                            this.src='https://via.placeholder.com/300'
-                        "
-                    >
-
-                    <h3>
-                        ${product.name}
-                    </h3>
-
-                    
-
-                    <p class="product-stock-status">
-
-                        ${currentLang === 'ar'
-                    ?
-                    'الكمية المتوفرة:'
-                    :
-                    'Available Stock:'
-                }
-
-                        <span>
-
-                            ${product.stock}
-
-                        </span>
-
-                    </p>
-
-                    <p class="price">
-
-                        ${product.price.toLocaleString()}
-
-                        ${currentLang === 'ar'
-                    ?
-                    'دينار'
-                    :
-                    'JOD'
-                }
-
-                    </p>
-
-                    <div class="product-buttons">
-
-                        <a
-                            href="html/product.html?id=${product.id}"
-                            class="btn-secondary"
-                        >
-
-                            ${currentLang === 'ar'
-                    ?
-                    'عرض التفاصيل'
-                    :
-                    'View Details'
-                }
-
-                        </a>
-
-                        <button
-                            class="btn-add-cart"
-
-                            data-id="${product.id}"
-                        >
-
-                            ${currentLang === 'ar'
-                    ?
-                    'أضف للسلة 🛒'
-                    :
-                    'Add To Cart 🛒'
-                }
-
-                        </button>
-
-                    </div>
-
+// ========================================
+// تحميل المنتجات من Firebase
+// ========================================
+async function loadProductsFromFirebase() {
+    const productsGrid = document.querySelector('.products-grid');
+    
+    if (!productsGrid) return;
+    
+    // عرض مؤقت للتحميل
+    productsGrid.innerHTML = `
+        <div style="text-align: center; padding: 50px; width: 100%;">
+            ⏳ جاري تحميل المنتجات...
+        </div>
+    `;
+    
+    try {
+        const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+        const products = [];
+        
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.published === true) { // فقط المنتجات المنشورة
+                products.push({ 
+                    firebaseId: doc.id,
+                    id: doc.id, // للحفاظ على التوافق مع الكود القديم
+                    ...data 
+                });
+            }
+        });
+        
+        allProducts = products;
+        
+        if (products.length === 0) {
+            productsGrid.innerHTML = `
+                <div style="text-align: center; padding: 50px; width: 100%;">
+                    📦 لا توجد منتجات متاحة حالياً
                 </div>
             `;
-        });
+            return;
+        }
+        
+        // عرض المنتجات
+        displayProducts(products);
+        
+        // تفعيل الفلترة بعد عرض المنتجات
+        setupCategoryFilter();
+        
+    } catch (error) {
+        console.error("خطأ في تحميل المنتجات من Firebase:", error);
+        productsGrid.innerHTML = `
+            <div style="text-align: center; padding: 50px; width: 100%; color: red;">
+                ❌ فشل في تحميل المنتجات<br>
+                يرجى التحقق من اتصال الإنترنت
+            </div>
+        `;
     }
+}
 
-    /*
-    =========================================
-    أزرار إضافة للسلة
-    =========================================
-    */
+// ========================================
+// عرض المنتجات في الصفحة
+// ========================================
+function displayProducts(products) {
+    const productsGrid = document.querySelector('.products-grid');
+    
+    if (!productsGrid || products.length === 0) return;
+    
+    productsGrid.innerHTML = '';
+    
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.setAttribute('data-category', product.type);
+        
+        productCard.innerHTML = `
+            <img src="${product.mainImage || 'https://via.placeholder.com/300'}" 
+                 alt="${product.name}"
+                 onerror="this.src='https://via.placeholder.com/300'">
+            <h3>${escapeHtml(product.name)}</h3>
+            <p class="product-stock-status">
+                ${currentLang === 'ar' ? 'الكمية المتوفرة:' : 'Available Stock:'}
+                <span style="${product.stock <= 0 ? 'color:red;' : 'color:green;'}">
+                    ${product.stock}
+                </span>
+            </p>
+            <p class="price">
+                ${product.price.toLocaleString()} 
+                ${currentLang === 'ar' ? 'دينار' : 'JOD'}
+            </p>
+            <div class="product-buttons">
+                <a href="html/product.html?id=${product.firebaseId}" class="btn-secondary">
+                    ${currentLang === 'ar' ? 'عرض التفاصيل' : 'View Details'}
+                </a>
+                <button class="btn-add-cart" data-id="${product.firebaseId}">
+                    ${currentLang === 'ar' ? 'أضف للسلة 🛒' : 'Add To Cart 🛒'}
+                </button>
+            </div>
+        `;
+        
+        productsGrid.appendChild(productCard);
+    });
+    
+    // إضافة مستمعات لأزرار إضافة للسلة
+    attachAddToCartListeners(products);
+}
 
-    const addToCartButtons =
-        document.querySelectorAll('.btn-add-cart');
-
+// ========================================
+// إضافة مستمعات لأزرار إضافة للسلة
+// ========================================
+function attachAddToCartListeners(products) {
+    const addToCartButtons = document.querySelectorAll('.btn-add-cart');
+    
     addToCartButtons.forEach(button => {
-
-        button.addEventListener('click', () => {
-
-            const productId =
-                Number(button.dataset.id);
-
-            const selectedProduct =
-                products.find(p => p.id === productId);
-
+        // إزالة المستمعات القديمة لمنع التكرار
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        
+        newButton.addEventListener('click', () => {
+            const productId = newButton.getAttribute('data-id');
+            const selectedProduct = products.find(p => p.firebaseId === productId);
+            
             if (!selectedProduct) return;
-
-            /*
-            =========================================
-            منع إضافة منتج غير متوفر
-            =========================================
-            */
-
+            
             if (selectedProduct.stock <= 0) {
-
-                alert(
-                    currentLang === 'ar'
-                        ?
-                        'هذا المنتج غير متوفر حالياً'
-                        :
-                        'This product is out of stock'
-                );
-
+                alert(currentLang === 'ar' 
+                    ? 'هذا المنتج غير متوفر حالياً' 
+                    : 'This product is out of stock');
                 return;
             }
-
-            /*
-            =========================================
-            بيانات السلة
-            =========================================
-            */
-
+            
             const cartProduct = {
-
-                id:
-                    selectedProduct.id,
-
-                name:
-                    selectedProduct.name,
-
-                price:
-                    selectedProduct.price,
-
-                image:
-                    selectedProduct.mainImage,
-
-                quantity:
-                    1,
-
-                stock:
-                    selectedProduct.stock
+                id: selectedProduct.firebaseId,
+                name: selectedProduct.name,
+                price: selectedProduct.price,
+                image: selectedProduct.mainImage,
+                quantity: 1,
+                stock: selectedProduct.stock
             };
-
+            
             addToCart(cartProduct);
         });
     });
+}
 
-    // د) تفعيل فلترة المنتجات حسب القسم المختار (خواتم، أساور، سلاسل)
+// ========================================
+// تفعيل فلترة المنتجات حسب القسم
+// ========================================
+function setupCategoryFilter() {
     const categoryItems = document.querySelectorAll('.category-item');
+    
     categoryItems.forEach(item => {
-        item.addEventListener('click', function () {
+        // إزالة المستمعات القديمة
+        const newItem = item.cloneNode(true);
+        item.parentNode.replaceChild(newItem, item);
+        
+        newItem.addEventListener('click', function() {
             categoryItems.forEach(cat => cat.classList.remove('active-cat'));
             this.classList.add('active-cat');
-
+            
             const selectedCategory = this.getAttribute('data-category');
             const productCards = document.querySelectorAll('.product-card');
-
+            
             productCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
-
+                
                 if (selectedCategory === 'all' || cardCategory === selectedCategory) {
                     card.style.display = 'block';
                     setTimeout(() => { card.style.opacity = '1'; }, 10);
@@ -301,28 +275,77 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-});
+}
 
-// 2. دالة إضافة المنتج إلى مصفوفة السلة
+// ========================================
+// دالة تطبيق الترجمة وتغيير اتجاه الصفحة
+// ========================================
+function applyLanguage(lang) {
+    const htmlTag = document.documentElement;
+    const langBtn = document.getElementById('lang-switcher');
+    
+    if (lang === 'en') {
+        htmlTag.setAttribute('dir', 'ltr');
+        htmlTag.setAttribute('lang', 'en');
+        if (langBtn) langBtn.innerText = 'العربية';
+    } else {
+        htmlTag.setAttribute('dir', 'rtl');
+        htmlTag.setAttribute('lang', 'ar');
+        if (langBtn) langBtn.innerText = 'English';
+    }
+    
+    // ترجمة العناصر الثابتة
+    const elementsToTranslate = document.querySelectorAll('[data-key]');
+    elementsToTranslate.forEach(el => {
+        const key = el.getAttribute('data-key');
+        if (translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
+    
+    // إعادة عرض المنتجات لتحديث النصوص
+    if (allProducts.length > 0) {
+        displayProducts(allProducts);
+    }
+}
+
+// ========================================
+// إضافة المنتج إلى السلة
+// ========================================
 function addToCart(product) {
-    const existingProduct = cart.find(item => item.name === product.name);
-
+    const existingProduct = cart.find(item => item.id === product.id);
+    
     if (existingProduct) {
         existingProduct.quantity += 1;
     } else {
         cart.push(product);
     }
-
+    
     localStorage.setItem('gold_store_cart', JSON.stringify(cart));
     updateCartCount();
-    alert(`تم إضافة ${product.name} إلى سلة المشتريات بنجاح! ✨`);
+    
+    alert(currentLang === 'ar' 
+        ? `تم إضافة ${product.name} إلى سلة المشتريات بنجاح! ✨` 
+        : `${product.name} has been added to cart! ✨`);
 }
 
-// 3. دالة تحديث عداد السلة في أعلى الموقع
+// ========================================
+// تحديث عداد السلة
+// ========================================
 function updateCartCount() {
     const cartCountElement = document.getElementById('cart-count');
     if (cartCountElement) {
-        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
         cartCountElement.innerText = totalItems;
     }
+}
+
+// ========================================
+// دالة مساعدة لتنظيف النص من HTML
+// ========================================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
