@@ -1,9 +1,38 @@
 /* تنسيقات صفحة سلة المشتريات */
 
+/* ========================================
+   تثبيت الفوتر في أسفل الصفحة
+   ======================================== */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* جعل المحتوى الرئيسي يأخذ المساحة المتبقية */
 .cart-container { 
     padding: 60px 8%; 
-    min-height: 60vh; 
+    min-height: 60vh;
+    flex: 1;
 }
+
+/* تثبيت الفوتر في الأسفل */
+footer {
+    margin-top: auto;
+}
+
+/* ========================================
+   تنسيقات الجدول والسلة
+   ======================================== */
 
 .cart-table { 
     width: 100%; 
@@ -124,4 +153,3 @@
     color: #777; 
     margin-top: 60px; 
 }
-
