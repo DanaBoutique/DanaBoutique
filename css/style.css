@@ -469,3 +469,32 @@ html[dir="ltr"] .product-stock-status {
         font-size: 16px;
     }
 }
+/* جعل جميع الصور متجاوبة */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* تحسين الحاويات */
+.container,
+.products-grid,
+.categories-grid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* تحسين الأزرار للأجهزة اللمس */
+button,
+.btn,
+.btn-add-cart,
+.btn-secondary,
+.btn-checkout {
+    cursor: pointer;
+    min-height: 44px; /* حجم مناسب للأصابع على الهواتف */
+}
+
+/* منع التمرير الأفقي */
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
