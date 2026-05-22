@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سلة المشتريات | دانه بوتيك</title>
+    <title>تأكيد الطلب | متجر دانه بوتيك</title>
     
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cart.css">
-        <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
-
+    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
 </head>
 <body>
 
@@ -19,39 +18,86 @@
         <nav>
             <ul>
                 <li><a href="../index.html">الرئيسية</a></li>
-                <li><a href="../index.html#categories">الأقسام</a></li>
-                <li><a href="../index.html#products">المنتجات</a></li>
-              <!--  <li><button id="lang-switcher" class="lang-btn">English</button></li> -->
+                <li><a href="cart.html">العودة للسلة 🛒</a></li>
             </ul>
         </nav>
-        <div class="cart-icon">
-            <a href="cart.html" class="active">🛒 السلة (<span id="cart-count">0</span>)</a>
-        </div>
     </header>
 
-    <main class="cart-container">
-        <h2>سلة المشتريات الخاصة بك</h2>
+    <main class="checkout-container">
+        <div class="checkout-wrapper">
 
-        <div id="cart-content-wrapper"></div>
+            <div class="checkout-form-box">
+                <h2>بيانات الشحن والتوصيل</h2>
+                <p class="form-subtitle">الرجاء إدخال بياناتك بدقة لضمان وصول الشحنة إليك في أسرع وقت.</p>
 
-        <div class="cart-summary" id="cart-summary-box" style="display: none;">
-            <h3>ملخص الطلب</h3>
-            <div class="summary-row total">
-                <span>إجمالي المنتجات:</span>
-                <span id="subtotal">0 دينار</span>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="cust-name">الاسم الكامل:</label>
+                        <input type="text" id="cust-name" placeholder="الاسم الثنائي" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cust-phone">رقم الهاتف (للتواصل عند التوصيل):</label>
+                        <input type="tel" id="cust-phone" placeholder="07xxxxxxxx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cust-city">المحافظة:</label>
+                        <select id="cust-city" required>
+                            <option value="">-- اختر المحافظة --</option>
+                            <option value="عمان">عمان</option>
+                            <option value="اربد">اربد</option>
+                            <option value="الزرقاء">الزرقاء</option>
+                            <option value="البلقاء">البلقاء (السلط)</option>
+                            <option value="الكرك">الكرك</option>
+                            <option value="مادبا">مادبا</option>
+                            <option value="جرش">جرش</option>
+                            <option value="عجلون">عجلون</option>
+                            <option value="المفرق">المفرق</option>
+                            <option value="الطفيلة">الطفيلة</option>
+                            <option value="معان">معان</option>
+                            <option value="العقبة">العقبة</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cust-address">العنوان السكني بالتفصيل:</label>
+                        <textarea id="cust-address" rows="3" placeholder="اسم المدينة، الحي، الشارع، رقم المنزل" required></textarea>
+                    </div>
+
+                    <div class="payment-method-badge">
+                        💵 <strong>طريقة الدفع المتاحة:</strong> الدفع عند الاستلام
+                    </div>
+
+                    <button type="submit" class="btn-confirm-order">تثبيت وتأكيد الطلب الآن 👑</button>
+                </form>
             </div>
-            
-            
-            <a href="checkout.html" class="btn-checkout">الانتقال لتأكيد الطلب (الدفع عند الاستلام)</a>
+
+            <div class="invoice-summary-box">
+                <h3>📋 ملخص الفاتورة</h3>
+                
+                <div id="checkout-items-list"></div>
+                
+                <div class="totals-section" style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px;">
+                    <div id="delivery-fee-group" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>🚚 رسوم التوصيل:</span>
+                        <strong id="delivery-fee-amount" style="color: #b8860b;">-- دينار</strong>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-top: 10px; color: #c5a059;">
+                        <span>💰 الإجمالي النهائي:</span>
+                        <strong id="checkout-final-price">0 دينار</strong>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <footer>
         <p>&copy; 2026 متجر دانه بوتيك للمجوهرات. جميع الحقوق محفوظة.</p>
     </footer>
-
-   <script type="module" src="../js/firebase.js"></script>
-<script type="module" src="../js/cart.js"></script> <!-- أو main.js أو product.js -->
-
+    
+    <script src="../js/checkout.js"></script>
 </body>
 </html>
