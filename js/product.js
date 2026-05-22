@@ -9,7 +9,7 @@ import {
     getDoc, 
     doc, 
     updateDoc 
-} from './firebase-config.js';
+} from './firebase.js';
 
 // ========================================
 // تحميل السلة
