@@ -173,7 +173,7 @@ function displayProducts(products) {
                 ${currentLang === 'ar' ? 'دينار' : 'JOD'}
             </p>
             <div class="product-buttons">
-                <a href="product.html?id=${product.firebaseId}" class="btn-secondary">
+                <a href="html/product.html?id=${product.firebaseId}" class="btn-secondary">
                     ${currentLang === 'ar' ? 'عرض التفاصيل' : 'View Details'}
                 </a>
                 <button class="btn-add-cart" data-id="${product.firebaseId}">
