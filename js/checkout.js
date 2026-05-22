@@ -90,7 +90,7 @@ function buildWhatsAppMessage(name, phone, city, address, subtotal, deliveryFee,
     const now = new Date();
     const dateStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
     
-    let message = `👑 *طلب جديد من متجر الجوهرة للمجوهرات* 👑\n`;
+    let message = `👑 *طلب جديد من متجر دانه بوتيك * 👑\n`;
     message += `📅 *تاريخ الطلب:* ${dateStr}\n\n`;
     
     message += `👤 *بيانات العميل:*\n`;
@@ -116,7 +116,7 @@ function buildWhatsAppMessage(name, phone, city, address, subtotal, deliveryFee,
     message += `🚚 *رسوم التوصيل:* ${deliveryFee === 0 ? 'مجاني' : deliveryFee + ' دينار'}\n`;
     message += `💰 *الإجمالي النهائي:* ${totalOrderPrice.toLocaleString()} دينار\n`;
     message += `💵 *طريقة الدفع:* الدفع عند الاستلام\n\n`;
-    message += `🙏 *شكراً لثقتكم بمتجر الجوهرة*`;
+    message += `🙏 *شكراً لثقتكم بمتجر دانه بوتيك*`;
 
     return message;
 }
