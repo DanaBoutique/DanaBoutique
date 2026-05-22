@@ -6,7 +6,7 @@ import {
     COLLECTION_NAME, 
     collection, 
     getDocs 
-} from 'firebase.js';
+} from './firebase.js';
 
 // ========================================
 // قاموس الترجمة للمصطلحات الأساسية في الموقع
