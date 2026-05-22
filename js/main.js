@@ -4,8 +4,8 @@ const translations = {
         "nav-home": "الرئيسية",
         "nav-categories": "الأقسام",
         "nav-products": "المنتجات",
-        "hero-title": "أناقة الذهب الخالص تكتمل بكِ",
-        "hero-desc": "اكتشفي تشكيلتنا الجديدة من أرقى إكسسوارات الذهب المصممة خصيصاً لتناسب ذوقك الرفيع.",
+        "hero-title": "أناقة الذهب المطلي تكتمل معكِ",
+        "hero-desc": "اكتشفي تشكيلتنا الجديدة من أرقى الإكسسوارات المطلية بالذهب، المصممة لتمنحك لمسة فخامة تناسب ذوقك الرفيع وترافقك في كل لحظة.",
         "hero-btn": "تصفح التشكيلة الآن",
         "section-categories": "تسوّقي حسب القسم",
         "section-products": "أحدث القطع والمجوهرات",
@@ -16,7 +16,7 @@ const translations = {
         "stock-text": "المخزون المتاح:",
         "view-details": "عرض التفاصيل",
         "add-to-cart": "أضف للسلة 🛒",
-        "currency": "ريال"
+        "currency": "دينار"
     },
     en: {
         "nav-home": "Home",
@@ -90,52 +90,191 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // أ) تحديث عداد السلة في الهيدر فور فتح الموقع
     updateCartCount();
+    /*
+=========================================
+عرض المنتجات القادمة من لوحة التحكم
+=========================================
+*/
 
-    // ب) عرض المنتجات المضافة من لوحة التحكم
-    const customProducts = JSON.parse(localStorage.getItem('custom_products_list')) || [];
-    const productsGrid = document.querySelector('.products-grid');
+    const products =
+        JSON.parse(localStorage.getItem('custom_products_list')) || [];
 
-    if (customProducts.length > 0 && productsGrid) {
-        // تفريغ المحتوى الافتراضي إذا كنت تريد عرض منتجات لوحة التحكم فقط
+    const productsGrid =
+        document.querySelector('.products-grid');
+
+    /*
+    =========================================
+    عرض المنتجات المنشورة فقط
+    =========================================
+    */
+
+    const publishedProducts =
+        products.filter(product => product.published);
+
+    if (publishedProducts.length > 0 && productsGrid) {
+
         productsGrid.innerHTML = '';
 
-        customProducts.forEach(prod => {
+        publishedProducts.forEach(product => {
+
             productsGrid.innerHTML += `
-                <div class="product-card" data-category="${prod.caliber}">
-                    <img src="${prod.mainImage}" alt="${prod.name}">
-                    <h3>${prod.name}</h3>
-                    <p class="product-details">الوزن: ${prod.weight} | العيار: ${prod.caliber}</p>
+
+                <div
+                    class="product-card"
+                    data-category="${product.type}"
+                >
+
+                    <img
+                        src="${product.mainImage}"
+                        alt="${product.name}"
+
+                        onerror="
+                            this.src='https://via.placeholder.com/300'
+                        "
+                    >
+
+                    <h3>
+                        ${product.name}
+                    </h3>
+
                     
-                    <p class="product-stock-status">المخزون المتاح: <span>${prod.stock} قطع</span></p>
-                    
-                    <p class="price">${prod.price.toLocaleString()} ريال</p>
+
+                    <p class="product-stock-status">
+
+                        ${currentLang === 'ar'
+                    ?
+                    'الكمية المتوفرة:'
+                    :
+                    'Available Stock:'
+                }
+
+                        <span>
+
+                            ${product.stock}
+
+                        </span>
+
+                    </p>
+
+                    <p class="price">
+
+                        ${product.price.toLocaleString()}
+
+                        ${currentLang === 'ar'
+                    ?
+                    'دينار'
+                    :
+                    'JOD'
+                }
+
+                    </p>
+
                     <div class="product-buttons">
-                        <a href="product.html?id=${prod.id}" class="btn-secondary">عرض التفاصيل</a>
-                        <button class="btn-add-cart">أضف للسلة 🛒</button>
+
+                        <a
+                            href="html/product.html?id=${product.id}"
+                            class="btn-secondary"
+                        >
+
+                            ${currentLang === 'ar'
+                    ?
+                    'عرض التفاصيل'
+                    :
+                    'View Details'
+                }
+
+                        </a>
+
+                        <button
+                            class="btn-add-cart"
+
+                            data-id="${product.id}"
+                        >
+
+                            ${currentLang === 'ar'
+                    ?
+                    'أضف للسلة 🛒'
+                    :
+                    'Add To Cart 🛒'
+                }
+
+                        </button>
+
                     </div>
+
                 </div>
             `;
         });
     }
 
-    // جـ) التقاط وتفعيل أزرار "أضف للسلة" (نقوم بالتقاطها هنا بعد طباعة منتجات لوحة التحكم)
-    const addToCartButtons = document.querySelectorAll('.btn-add-cart');
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const productCard = e.target.closest('.product-card');
-            const productName = productCard.querySelector('h3').innerText;
-            const productPriceText = productCard.querySelector('.price').innerText;
-            const productPrice = parseInt(productPriceText.replace(/[^0-9]/g, ''));
-            const productImage = productCard.querySelector('img').src;
+    /*
+    =========================================
+    أزرار إضافة للسلة
+    =========================================
+    */
 
-            const product = {
-                name: productName,
-                price: productPrice,
-                image: productImage,
-                quantity: 1
+    const addToCartButtons =
+        document.querySelectorAll('.btn-add-cart');
+
+    addToCartButtons.forEach(button => {
+
+        button.addEventListener('click', () => {
+
+            const productId =
+                Number(button.dataset.id);
+
+            const selectedProduct =
+                products.find(p => p.id === productId);
+
+            if (!selectedProduct) return;
+
+            /*
+            =========================================
+            منع إضافة منتج غير متوفر
+            =========================================
+            */
+
+            if (selectedProduct.stock <= 0) {
+
+                alert(
+                    currentLang === 'ar'
+                        ?
+                        'هذا المنتج غير متوفر حالياً'
+                        :
+                        'This product is out of stock'
+                );
+
+                return;
+            }
+
+            /*
+            =========================================
+            بيانات السلة
+            =========================================
+            */
+
+            const cartProduct = {
+
+                id:
+                    selectedProduct.id,
+
+                name:
+                    selectedProduct.name,
+
+                price:
+                    selectedProduct.price,
+
+                image:
+                    selectedProduct.mainImage,
+
+                quantity:
+                    1,
+
+                stock:
+                    selectedProduct.stock
             };
 
-            addToCart(product);
+            addToCart(cartProduct);
         });
     });
 
