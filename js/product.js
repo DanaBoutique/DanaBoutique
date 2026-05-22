@@ -1,4 +1,34 @@
 // ========================================
+// استيراد Firebase
+// ========================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    getDoc, 
+    doc, 
+    updateDoc 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// ========================================
+// إعدادات Firebase (استبدل بقيم مشروعك)
+// ========================================
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
+// تهيئة Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const COLLECTION_NAME = "custom_products_list";
+
+// ========================================
 // تحميل السلة
 // ========================================
 let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
@@ -6,7 +36,7 @@ let cart = JSON.parse(localStorage.getItem('gold_store_cart')) || [];
 // ========================================
 // عند تحميل الصفحة
 // ========================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     updateCartCount();
 
@@ -26,46 +56,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /*
     ========================================
-    جلب المنتجات من قاعدة البيانات (localStorage)
+    جلب المنتج من Firebase باستخدام ID
     ========================================
     */
-    const products = JSON.parse(localStorage.getItem('custom_products_list')) || [];
-
-    // التحقق من وجود منتجات
-    if (products.length === 0) {
-        showError('لا توجد منتجات متاحة حالياً');
-        return;
+    try {
+        // جلب المنتج مباشرة باستخدام ID (أكثر كفاءة)
+        const productRef = doc(db, COLLECTION_NAME, productId);
+        const productSnap = await getDoc(productRef);
+        
+        if (!productSnap.exists()) {
+            showError('المنتج غير موجود ❌');
+            return;
+        }
+        
+        const product = { 
+            firebaseId: productSnap.id,
+            id: productSnap.id,
+            ...productSnap.data() 
+        };
+        
+        // التحقق من أن المنتج منشور
+        if (product.published === false) {
+            showError('هذا المنتج غير متاح حالياً ❌');
+            return;
+        }
+        
+        // تعبئة البيانات في الصفحة
+        loadProductDetails(product);
+        setupAddToCart(product);
+        
+    } catch (error) {
+        console.error("خطأ في جلب المنتج من Firebase:", error);
+        showError('حدث خطأ في تحميل المنتج. يرجى المحاولة مرة أخرى');
     }
-
-    /*
-    ========================================
-    البحث عن المنتج المطلوب
-    ========================================
-    */
-    const product = products.find(p => String(p.id) === String(productId));
-
-    /*
-    ========================================
-    التحقق من وجود المنتج وأنه منشور
-    ========================================
-    */
-    if (!product) {
-        showError('المنتج غير موجود ❌');
-        return;
-    }
-
-    if (product.published === false) {
-        showError('هذا المنتج غير متاح حالياً ❌');
-        return;
-    }
-
-    /*
-    ========================================
-    تعبئة البيانات في الصفحة
-    ========================================
-    */
-    loadProductDetails(product);
-    setupAddToCart(product);
 });
 
 // ========================================
@@ -179,8 +202,21 @@ function setupQuantityLimit(stock) {
         qtyInput.max = stock;
         qtyInput.value = 1;
 
-        // التأكد من أن القيمة لا تتجاوز الحد الأقصى
-        qtyInput.addEventListener('input', function () {
+        // إزالة المستمعات القديمة لمنع التكرار
+        const newQtyInput = qtyInput.cloneNode(true);
+        qtyInput.parentNode.replaceChild(newQtyInput, qtyInput);
+        
+        newQtyInput.addEventListener('input', function () {
+            let value = parseInt(this.value);
+            if (isNaN(value)) value = 1;
+            if (value > stock) {
+                this.value = stock;
+                alert(`الكمية المتاحة هي ${stock} فقط`);
+            }
+            if (value < 1) this.value = 1;
+        });
+        
+        newQtyInput.addEventListener('change', function () {
             let value = parseInt(this.value);
             if (isNaN(value)) value = 1;
             if (value > stock) {
@@ -203,71 +239,89 @@ function setupAddToCart(product) {
     const newBtn = addBtn.cloneNode(true);
     addBtn.parentNode.replaceChild(newBtn, addBtn);
 
-    newBtn.addEventListener('click', () => {
+    newBtn.addEventListener('click', async () => {
         const quantityInput = document.getElementById('product-qty');
         const quantity = Number(quantityInput?.value) || 1;
 
-        // إعادة جلب المنتجات للتأكد من المخزن الحالي
-        const currentProducts = JSON.parse(localStorage.getItem('custom_products_list')) || [];
-        const currentProductIndex = currentProducts.findIndex(p => p.id === product.id);
-
-        if (currentProductIndex === -1) {
-            alert('حدث خطأ: المنتج غير موجود في قاعدة البيانات');
-            return;
-        }
-
-        const currentProduct = currentProducts[currentProductIndex];
-
-        // التحقق من الكمية المتوفرة بالمخزن
-        if (!currentProduct || currentProduct.stock <= 0) {
-            alert('عذراً، نفدت الكمية من المخزن بالكامل! 😟');
-            return;
-        }
-
-        if (quantity > currentProduct.stock) {
-            alert(`الكمية المطلوبة (${quantity}) أكبر من المتاح (${currentProduct.stock})!`);
-            return;
-        }
-
-        // 1. تحديث المخزن الرئيسي
-        currentProducts[currentProductIndex].stock -= quantity;
-        localStorage.setItem('custom_products_list', JSON.stringify(currentProducts));
-
-        // تحديث الرقم المعروض على الشاشة
-        const stockSpan = document.getElementById('p-stock');
-        if (stockSpan) {
-            stockSpan.innerText = currentProducts[currentProductIndex].stock;
-        }
-
-        // تحديث حالة التوفر
-        const availabilitySpan = document.getElementById('p-availability');
-        if (availabilitySpan) {
-            const newStock = currentProducts[currentProductIndex].stock;
-            if (newStock <= 0) {
-                availabilitySpan.innerText = 'غير متوفر';
-                availabilitySpan.style.color = 'red';
-            } else {
-                availabilitySpan.innerText = 'متوفر';
-                availabilitySpan.style.color = 'green';
+        // ========================================
+        // جلب المنتج من Firebase للتأكد من المخزن الحالي
+        // ========================================
+        try {
+            const productRef = doc(db, COLLECTION_NAME, product.firebaseId);
+            const productSnap = await getDoc(productRef);
+            
+            if (!productSnap.exists()) {
+                alert('حدث خطأ: المنتج غير موجود في قاعدة البيانات');
+                return;
             }
+            
+            const currentProduct = { 
+                firebaseId: productSnap.id,
+                ...productSnap.data() 
+            };
+            
+            // التحقق من الكمية المتوفرة بالمخزن
+            if (currentProduct.stock <= 0) {
+                alert('عذراً، نفدت الكمية من المخزن بالكامل! 😟');
+                return;
+            }
+            
+            if (quantity > currentProduct.stock) {
+                alert(`الكمية المطلوبة (${quantity}) أكبر من المتاح (${currentProduct.stock})!`);
+                return;
+            }
+            
+            // 1. تحديث المخزن في Firebase
+            const newStock = currentProduct.stock - quantity;
+            await updateDoc(productRef, {
+                stock: newStock,
+                updatedAt: new Date().toISOString()
+            });
+            
+            // تحديث الرقم المعروض على الشاشة
+            const stockSpan = document.getElementById('p-stock');
+            if (stockSpan) {
+                stockSpan.innerText = newStock;
+                if (newStock <= 0) {
+                    stockSpan.style.color = 'red';
+                } else {
+                    stockSpan.style.color = 'green';
+                }
+            }
+            
+            // تحديث حالة التوفر
+            const availabilitySpan = document.getElementById('p-availability');
+            if (availabilitySpan) {
+                if (newStock <= 0) {
+                    availabilitySpan.innerText = 'غير متوفر';
+                    availabilitySpan.style.color = 'red';
+                } else {
+                    availabilitySpan.innerText = 'متوفر';
+                    availabilitySpan.style.color = 'green';
+                }
+            }
+            
+            // تحديث الحد الأقصى لحقل الكمية
+            setupQuantityLimit(newStock);
+            
+            // 2. تجهيز بيانات السلة وإضافتها
+            const cartProduct = {
+                id: product.firebaseId,
+                name: product.name,
+                price: product.price,
+                image: product.mainImage,
+                quantity: quantity
+            };
+            
+            addToCartFromDetails(cartProduct);
+            
+            // إعادة تعيين حقل الكمية إلى 1
+            if (quantityInput) quantityInput.value = 1;
+            
+        } catch (error) {
+            console.error("خطأ في إضافة المنتج للسلة:", error);
+            alert("حدث خطأ أثناء إضافة المنتج. يرجى المحاولة مرة أخرى");
         }
-
-        // تحديث الحد الأقصى لحقل الكمية
-        setupQuantityLimit(currentProducts[currentProductIndex].stock);
-
-        // 2. تجهيز بيانات السلة وإضافتها
-        const cartProduct = {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.mainImage,
-            quantity: quantity
-        };
-
-        addToCartFromDetails(cartProduct);
-
-        // إعادة تعيين حقل الكمية إلى 1
-        if (quantityInput) quantityInput.value = 1;
     });
 }
 
