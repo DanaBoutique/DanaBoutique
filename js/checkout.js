@@ -136,8 +136,8 @@ function calculateSubtotal() {
 // حساب رسوم التوصيل
 // ========================================
 function getDeliveryFee(city) {
-    if (city === 'عمان') return 0;
-    return 5;
+    if (city === 'عمان') return 2;
+    return 2;
 }
 
 // ========================================
@@ -226,7 +226,7 @@ function renderCheckoutSummary() {
         itemsHTML += `
             <div class="checkout-item-summary" style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                 <span>${escapeText(item.name)} × ${item.quantity}</span>
-                <strong style="color: #c5a059;">${itemTotal.toLocaleString()} دينار</strong>
+                <strong style="color: #ca059;">${itemTotal.toLocaleString()} دينار</strong>
             </div>
         `;
     });
