@@ -11,14 +11,14 @@ import {
     deleteDoc 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 2. إعدادات مشروع الفايربيس الخاص بك (استبدل هذه بالبيانات الخاصة بك)
+// 2. إعدادات مشروع الفايربيس (✓ تم استبدالها ببياناتك الحقيقية)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBsvRjG8XHKCw_ySSqWk8sXm5X0vVgWg3U",
+    authDomain: "dana-boutique.firebaseapp.com",
+    projectId: "dana-boutique",
+    storageBucket: "dana-boutique.firebasestorage.app",
+    messagingSenderId: "468114494092",
+    appId: "1:468114494092:web:7bd33fe3c7a03a40d961a9"
 };
 
 // 3. تهيئة المشروع وقاعدة البيانات
@@ -203,13 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 🗑️ حذف
                             </button>
                         </td>
-                    </tr>
+                     </tr>
                 `;
             });
 
             tableHTML += `
                             </tbody>
-                        </table>
+                         </table>
                     </div>
                 </div>
             `;
